@@ -7,6 +7,7 @@ import styles from './SplashScreen.module.css';
  * SplashScreen — Landing page with names, date, ornaments, particles, and enter button.
  */
 export default function SplashScreen({ visible, onEnter, isLowEnd }) {
+  const [soundEnabled, setSoundEnabled] = useState(true);
   const particlesRef = useRef(null);
   const [gone, setGone] = useState(false);
 
@@ -87,14 +88,36 @@ export default function SplashScreen({ visible, onEnter, isLowEnd }) {
           <span>2026</span>
         </div>
 
-        <button className={styles.enterBtn} onClick={handleClick}>
-          <span>Open Invitation</span>
-          <span className={styles.btnIcon}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M7 17l9.2-9.2M17 17V7H7" />
-            </svg>
-          </span>
-        </button>
+        <div className={styles.actionArea}>
+          <button className={styles.enterBtn} onClick={() => onEnter?.(soundEnabled)}>
+            <span>Open Invitation</span>
+            <span className={styles.btnIcon}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M7 17l9.2-9.2M17 17V7H7" />
+              </svg>
+            </span>
+          </button>
+
+          <button 
+            className={`${styles.splashSoundToggle} ${!soundEnabled ? styles.muted : ''}`}
+            onClick={() => setSoundEnabled(!soundEnabled)}
+            title={soundEnabled ? "Mute" : "Unmute"}
+          >
+            {soundEnabled ? (
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M11 5L6 9H2V15H6L11 19V5Z" />
+                <path d="M19.07 4.93C20.94 6.81 22 9.33 22 12C22 14.67 20.94 17.19 19.07 19.07" />
+                <path d="M15.54 8.46C16.47 9.4 17 10.66 17 12C17 13.34 16.47 14.6 15.54 15.54" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M11 5L6 9H2V15H6L11 19V5Z" />
+                <line x1="23" y1="9" x2="17" y2="15" />
+                <line x1="17" y1="9" x2="23" y2="15" />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

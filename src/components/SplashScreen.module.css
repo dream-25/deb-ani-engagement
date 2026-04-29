@@ -251,3 +251,53 @@
     font-size: 0.9rem;
   }
 }
+
+/* Action Area & Splash Sound Toggle */
+.actionArea {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  opacity: 0;
+  animation: slideUp 1s ease 1.8s forwards;
+}
+
+.actionArea .enterBtn {
+  animation: none;
+  opacity: 1;
+}
+
+.splashSoundToggle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1.5px solid var(--gold);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.splashSoundToggle:hover {
+  background: var(--gold);
+  color: var(--deep-maroon);
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.3);
+}
+
+.splashSoundToggle.muted {
+  border-color: rgba(201, 168, 76, 0.4);
+  color: rgba(201, 168, 76, 0.6);
+}
+
+@media (max-width: 480px) {
+  .actionArea {
+    gap: 10px;
+  }
+  .splashSoundToggle {
+    width: 46px;
+    height: 46px;
+  }
+}

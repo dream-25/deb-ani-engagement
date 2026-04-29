@@ -57,12 +57,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         {/* Preload critical first frames for instant canvas paint */}
-        <link rel="preload" as="image" href="/frames-mobile/ezgif-frame-001.jpg" media="(max-width: 768px)" />
-        <link rel="preload" as="image" href="/frames-mobile/ezgif-frame-002.jpg" media="(max-width: 768px)" />
-        <link rel="preload" as="image" href="/frames-mobile/ezgif-frame-003.jpg" media="(max-width: 768px)" />
-        <link rel="preload" as="image" href="/frames-desktop/ezgif-frame-001.jpg" media="(min-width: 769px)" />
-        <link rel="preload" as="image" href="/frames-desktop/ezgif-frame-002.jpg" media="(min-width: 769px)" />
-        <link rel="preload" as="image" href="/frames-desktop/ezgif-frame-003.jpg" media="(min-width: 769px)" />
+        <link rel="preload" as="image" href="/frames-mobile/ezgif-frame-001.jpg" media="(max-width: 768px)" crossOrigin="anonymous" />
+        <link rel="preload" as="image" href="/frames-mobile/ezgif-frame-002.jpg" media="(max-width: 768px)" crossOrigin="anonymous" />
+        <link rel="preload" as="image" href="/frames-mobile/ezgif-frame-003.jpg" media="(max-width: 768px)" crossOrigin="anonymous" />
+        <link rel="preload" as="image" href="/frames-desktop/ezgif-frame-001.jpg" media="(min-width: 769px)" crossOrigin="anonymous" />
+        <link rel="preload" as="image" href="/frames-desktop/ezgif-frame-002.jpg" media="(min-width: 769px)" crossOrigin="anonymous" />
+        <link rel="preload" as="image" href="/frames-desktop/ezgif-frame-003.jpg" media="(min-width: 769px)" crossOrigin="anonymous" />
       </head>
       <body
         className={`${cormorant.variable} ${greatVibes.variable} ${playfair.variable} ${lora.variable}`}

@@ -9,6 +9,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 // Utils
 import { haptic } from '@/utils/haptics';
+import { audio } from '@/utils/audio';
 
 // Components
 import Preloader from '@/components/Preloader';
@@ -19,6 +20,7 @@ import FrameCanvas from '@/components/FrameCanvas';
 import Overlays from '@/components/Overlays';
 import SceneText from '@/components/SceneText';
 import BottomSection from '@/components/BottomSection';
+import SoundToggle from '@/components/SoundToggle';
 
 /**
  * Main page orchestrator.
@@ -46,6 +48,7 @@ export default function HomePage() {
   useEffect(() => {
     document.body.classList.add('scroll-locked');
     window.scrollTo(0, 0);
+    audio.init();
   }, []);
 
   // ── Frame loader callbacks ──
@@ -115,8 +118,10 @@ export default function HomePage() {
   }, [scrollActive]);
 
   // ── Splash dismiss handler ──
-  const handleEnter = useCallback(() => {
+  const handleEnter = useCallback((soundEnabled) => {
     haptic('medium');
+    audio.setMute(!soundEnabled);
+    audio.playBGM();
 
     // Trigger Fullscreen for mobile
     if (device.isMobile) {
@@ -133,14 +138,25 @@ export default function HomePage() {
     window.scrollTo(0, 0);
     setSplashVisible(false);
 
+    // Force a first frame draw immediately
+    if (canvasRef.current) {
+      scrollAnim.resizeCanvas();
+      scrollAnim.drawFrame(0);
+    }
+
     setTimeout(() => {
+      // Re-draw after layout shifts (especially for fullscreen)
+      if (canvasRef.current) {
+        scrollAnim.resizeCanvas();
+        scrollAnim.drawFrame(0);
+      }
       // Unlock scrolling
       document.body.classList.remove('scroll-locked');
       setScrollActive(true);
       setShowScrollHint(true);
       setShowParticles(true);
-    }, 1000);
-  }, [device.isMobile]);
+    }, 500);
+  }, [device.isMobile, scrollAnim]);
 
   // Resize canvas on initial mount (after preloader hidden)
   useEffect(() => {
@@ -173,6 +189,7 @@ export default function HomePage() {
         <SceneText ref={sceneTextRef} />
       </FrameCanvas>
 
+      {!splashVisible && <SoundToggle />}
       <BottomSection active={scrollActive} />
     </>
   );

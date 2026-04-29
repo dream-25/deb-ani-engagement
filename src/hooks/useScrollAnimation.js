@@ -2,6 +2,7 @@
 
 import { useRef, useCallback, useEffect } from 'react';
 import { haptic } from '@/utils/haptics';
+import { audio } from '@/utils/audio';
 
 /**
  * Scroll animation hook.
@@ -54,6 +55,9 @@ export function useScrollAnimation({
     const ctx = canvas.getContext('2d', { alpha: false });
     ctx.scale(dpr, dpr);
     ctxRef.current = ctx;
+
+    // Force redraw on next drawFrame call
+    currentFrameRef.current = -1;
   }, [canvasRef, isLowEnd]);
 
   // Draw a frame onto the canvas
@@ -116,6 +120,7 @@ export function useScrollAnimation({
     // Map scroll → frame
     const totalFrames = frameLoader.getTotalFrames();
     const frameIndex = Math.floor(progress * (totalFrames - 1));
+
     drawFrame(frameIndex);
 
     // Haptic at scene transitions (every 25 frames)
@@ -159,25 +164,39 @@ export function useScrollAnimation({
 
     window.addEventListener('scroll', requestTick, { passive: true });
 
+    return () => {
+      window.removeEventListener('scroll', requestTick);
+    };
+  }, [active, onScroll, TICK_INTERVAL]);
+
+  // Handle resizing and fullscreen transitions (always active)
+  useEffect(() => {
     let resizeTimer;
     const onResize = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        resizeCanvas();
         const lastFrame = currentFrameRef.current;
-        currentFrameRef.current = -1;
+        resizeCanvas();
+        // resizeCanvas sets currentFrameRef to -1, so we draw the last valid frame
         drawFrame(lastFrame >= 0 ? lastFrame : 0);
       }, 150);
     };
 
     window.addEventListener('resize', onResize);
+    window.addEventListener('fullscreenchange', onResize);
+    window.addEventListener('webkitfullscreenchange', onResize);
+    window.addEventListener('mozfullscreenchange', onResize);
+    window.addEventListener('MSFullscreenChange', onResize);
 
     return () => {
-      window.removeEventListener('scroll', requestTick);
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('fullscreenchange', onResize);
+      window.removeEventListener('webkitfullscreenchange', onResize);
+      window.removeEventListener('mozfullscreenchange', onResize);
+      window.removeEventListener('MSFullscreenChange', onResize);
       clearTimeout(resizeTimer);
     };
-  }, [active, onScroll, resizeCanvas, drawFrame, TICK_INTERVAL]);
+  }, [resizeCanvas, drawFrame]);
 
   return { resizeCanvas, drawFrame };
 }

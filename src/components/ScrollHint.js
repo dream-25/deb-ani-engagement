@@ -11,7 +11,7 @@ export default function ScrollHint({ visible }) {
       <div className={styles.mouse}>
         <div className={styles.wheel} />
       </div>
-      <p>Scroll to unveil</p>
+      <p>Scroll to Reveal</p>
     </div>
   );
 }

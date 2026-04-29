@@ -61,7 +61,7 @@ export default function VenueCard() {
       </div>
 
       <a
-        href="https://share.google/38S0LYKTHGK5KbFAa"
+        href="https://maps.app.goo.gl/vRvxG76tnNk8hZEk6"
         target="_blank"
         rel="noopener noreferrer"
         className={styles.btn}

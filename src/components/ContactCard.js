@@ -23,11 +23,11 @@ export default function ContactCard() {
 
       <div className={styles.contactNumbers}>
         <a href="tel:+917001445261" className={styles.contactLink}>
-          <span className={styles.contactNum}>70014 45261</span>
+          <span className={styles.contactNum}>70014 45261 (Anirban)</span>
         </a>
         <span className={styles.contactDivider}>/</span>
         <a href="tel:+917596897406" className={styles.contactLink}>
-          <span className={styles.contactNum}>7596897406</span>
+          <span className={styles.contactNum}>7596897406 (Debolina)</span>
         </a>
       </div>
     </div>
