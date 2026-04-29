@@ -1,0 +1,68 @@
+@keyframes heartBeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.25);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.15);
+  }
+  60% {
+    transform: scale(1);
+  }
+}
+
+.footer {
+  text-align: center;
+  padding: 20px 16px 10px;
+  pointer-events: auto;
+}
+
+.footer p {
+  font-family: var(--font-lora), 'Lora', serif;
+  font-size: 0.8rem;
+  color: var(--cream);
+  opacity: 0.7;
+  letter-spacing: 1px;
+  transition: opacity 0.3s;
+}
+
+.footer:hover p {
+  opacity: 1;
+}
+
+.footer a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(201, 168, 76, 0.4);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.footer a::after {
+  content: ' ↗';
+  font-size: 0.75rem;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.footer a:hover::after {
+  opacity: 1;
+}
+
+.footer a:hover {
+  color: var(--gold-light);
+  border-bottom-color: var(--gold-light);
+}
+
+.heart {
+  color: var(--rose);
+  font-size: 0.85rem;
+  display: inline-block;
+  animation: heartBeat 2s ease-in-out infinite;
+}

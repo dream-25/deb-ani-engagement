@@ -1,0 +1,149 @@
+@keyframes pinPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(201, 168, 76, 0);
+  }
+}
+
+/* === SHARED CARD STYLES === */
+
+.glass {
+  background: rgba(26, 10, 16, 0.65);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(201, 168, 76, 0.1);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pin {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--deep-maroon);
+  flex-shrink: 0;
+  animation: pinPulse 3s ease-in-out infinite;
+}
+
+.title {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.subtitle {
+  font-family: var(--font-lora), 'Lora', serif;
+  font-size: 0.75rem;
+  color: var(--cream);
+  opacity: 0.8;
+  letter-spacing: 1px;
+}
+
+/* Map */
+.mapWrap {
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  border: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+/* Details rows */
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.detailRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--font-lora), 'Lora', serif;
+  font-size: 0.85rem;
+  color: var(--cream);
+}
+
+.detailRow svg {
+  flex-shrink: 0;
+  color: var(--gold);
+  margin-top: 2px;
+}
+
+/* CTA button */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--deep-maroon);
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 168, 76, 0.4);
+}
+
+/* Contact specifics */
+.contactNumbers {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.contactLink {
+  text-decoration: none;
+}
+
+.contactNum {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--gold);
+  letter-spacing: 1px;
+  border-bottom: 1px dashed rgba(201, 168, 76, 0.3);
+  padding-bottom: 2px;
+  transition: all 0.3s;
+}
+
+.contactLink:hover .contactNum {
+  color: var(--gold-light);
+  border-bottom-color: var(--gold-light);
+}
+
+.contactDivider {
+  color: var(--cream);
+  opacity: 0.4;
+}
+
+@media (max-width: 768px) {
+  .mapWrap iframe {
+    height: 120px;
+  }
+}

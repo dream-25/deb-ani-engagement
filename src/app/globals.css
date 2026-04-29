@@ -1,0 +1,43 @@
+/* ============================================
+   GLOBALS — Design Tokens, Resets, Keyframes
+   ============================================ */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --gold: #c9a84c;
+  --gold-light: #e8d48b;
+  --maroon: #6b1d3a;
+  --ivory: #faf6ef;
+  --cream: #f5ead6;
+  --rose: #c2607e;
+  --deep-maroon: #3a0e1f;
+  --text-dark: #2c1810;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
+  background: var(--ivory);
+  color: var(--text-dark);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Lock scrolling while splash is visible */
+body.scroll-locked {
+  overflow: hidden !important;
+  height: 100vh;
+}
+
+/* Shared base animations removed and moved to component modules for better reliability in Next.js */
+
