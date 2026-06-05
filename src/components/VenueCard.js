@@ -18,7 +18,7 @@ export default function VenueCard() {
         </div>
         <div>
           <h3 className={styles.title}>Venue Location</h3>
-          <p className={styles.subtitle}>BIRNAGAR SPORTING CLUB</p>
+          <p className={styles.subtitle}>THE ROYAL HERITAGE BANQUET</p>
         </div>
       </div>
 
@@ -56,12 +56,14 @@ export default function VenueCard() {
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
             <circle cx="12" cy="10" r="3" />
           </svg>
-          <span>22/6, Desbandhu Rd, Baghajatin Place, Kolkata 700086</span>
+          <span>1st Floor, 19, Baghajatin Station Rd,
+            SPD Block, Ajanta Park, Baghajatin Colony,
+            Kolkata, West Bengal 700086</span>
         </div>
       </div>
 
       <a
-        href="https://maps.app.goo.gl/vRvxG76tnNk8hZEk6"
+        href="https://maps.app.goo.gl/TswXMFBRFvyG6YNe6"
         target="_blank"
         rel="noopener noreferrer"
         className={styles.btn}

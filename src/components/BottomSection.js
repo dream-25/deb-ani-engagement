@@ -5,7 +5,7 @@ import styles from './BottomSection.module.css';
 import VenueCard from './VenueCard';
 import ContactCard from './ContactCard';
 import Watermark from './Watermark';
-import DevFooter from './DevFooter';
+// import DevFooter from './DevFooter';
 import { haptic } from '@/utils/haptics';
 
 /**
@@ -53,7 +53,7 @@ export default function BottomSection({ active }) {
         </div>
 
         <Watermark />
-        <DevFooter />
+        {/* <DevFooter /> */}
       </div>
     </section>
   );

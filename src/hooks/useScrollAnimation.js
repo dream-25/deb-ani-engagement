@@ -88,8 +88,8 @@ export function useScrollAnimation({
         if (!iw || !ih) return;
       }
 
-      // Cover fit
-      const scale = Math.max(cw / iw, ch / ih);
+      // Contain fit
+      const scale = Math.min(cw / iw, ch / ih);
       const sw = iw * scale;
       const sh = ih * scale;
       const sx = (cw - sw) / 2;
