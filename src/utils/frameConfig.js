@@ -34,14 +34,12 @@ export function getLoadingConfig(isLowEnd, isVeryLowEnd) {
   // Frame step — skip frames on weak devices
   const frameStep = isVeryLowEnd ? 3 : isLowEnd ? 2 : 1;
 
-  // Priority frames — loaded before preloader dismisses
-  const priorityFrames = 15;
+  // Batch size for loading
+  const batchSize = isLowEnd ? 10 : 20;
 
-  // Batch size for lazy loading
-  const batchSize = isLowEnd ? 8 : 15;
-
-  // How far ahead to prefetch from current scroll position
+  // How far ahead to prefetch (if we were still doing lazy loading, 
+  // but now we're mostly preloading everything)
   const prefetchWindow = isLowEnd ? 20 : 40;
 
-  return { frameStep, priorityFrames, batchSize, prefetchWindow };
+  return { frameStep, batchSize, prefetchWindow };
 }

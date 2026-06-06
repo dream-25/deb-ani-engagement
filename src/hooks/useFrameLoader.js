@@ -11,27 +11,21 @@ import {
 } from '@/utils/frameConfig';
 
 /**
- * Progressive frame loader hook.
- *
- * Phase 1: Priority-load the first N frames (critical path for preloader).
- * Phase 2: Lazy-load the rest in idle batches.
- * Phase 3: Scroll-ahead prefetcher fires on each frame draw.
+ * Frame loader hook that preloads all frames upfront.
  *
  * @param {object} device - From useDeviceCapability
- * @param {function} onPriorityProgress - Called with (loaded, total) during priority phase
- * @param {function} onPriorityComplete - Called when priority frames are all loaded
+ * @param {function} onPriorityProgress - Called with (loaded, total) during loading
+ * @param {function} onPriorityComplete - Called when all frames are loaded
  */
 export function useFrameLoader(device, onPriorityProgress, onPriorityComplete) {
   const framesRef = useRef([]);
   const frameLoadedRef = useRef([]);
   const totalFramesRef = useRef(0);
   const configRef = useRef(null);
-  const lazyStartedRef = useRef(false);
   const initRef = useRef(false);
 
   // Initialize and start loading
   useEffect(() => {
-    // Wait until device capability is detected (runs client-side)
     if (!device.ready) return;
     if (initRef.current) return;
     initRef.current = true;
@@ -48,13 +42,13 @@ export function useFrameLoader(device, onPriorityProgress, onPriorityComplete) {
     framesRef.current = new Array(totalFrames).fill(null);
     frameLoadedRef.current = new Array(totalFrames).fill(false);
 
-    // Start priority loading
-    loadPriorityFrames(config, framePath, totalFrames, supportsImageBitmap);
+    // Start loading all frames
+    loadAllFrames(config, framePath, totalFrames, supportsImageBitmap);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [device]);
 
-  // Load a single frame (with ImageBitmap / decode optimization)
+  // Load a single frame
   const loadSingleFrame = useCallback((slotIndex, framePath, frameStep, supportsImageBitmap) => {
     return new Promise((resolve) => {
       if (frameLoadedRef.current[slotIndex]) {
@@ -92,96 +86,54 @@ export function useFrameLoader(device, onPriorityProgress, onPriorityComplete) {
     });
   }, []);
 
-  // Phase 1: Priority frames
-  const loadPriorityFrames = useCallback(
+  // Load all frames with concurrency limit
+  const loadAllFrames = useCallback(
     async (config, framePath, totalFrames, supportsImageBitmap) => {
-      const count = Math.min(config.priorityFrames, totalFrames);
       let loaded = 0;
+      const { batchSize, frameStep } = config;
+      
+      let running = 0;
+      let nextIndex = 0;
 
-      const promises = [];
-      for (let i = 0; i < count; i++) {
-        promises.push(
-          loadSingleFrame(i, framePath, config.frameStep, supportsImageBitmap).then(() => {
+      const loadNext = () => {
+        if (nextIndex >= totalFrames) {
+          if (running === 0) {
+            onPriorityComplete?.();
+          }
+          return;
+        }
+
+        while (running < batchSize && nextIndex < totalFrames) {
+          const currentIndex = nextIndex++;
+          running++;
+          loadSingleFrame(currentIndex, framePath, frameStep, supportsImageBitmap).then(() => {
             loaded++;
-            onPriorityProgress?.(loaded, count);
-          })
-        );
-      }
-      await Promise.all(promises);
-      onPriorityComplete?.();
+            running--;
+            onPriorityProgress?.(loaded, totalFrames);
+            loadNext();
+          });
+        }
+      };
+
+      loadNext();
     },
     [loadSingleFrame, onPriorityProgress, onPriorityComplete]
   );
 
-  // Phase 2: Lazy batch loading
+  // Compatible stubs
   const startLazyLoading = useCallback(() => {
-    if (lazyStartedRef.current || !configRef.current) return;
-    lazyStartedRef.current = true;
+    // Everything is already loading/loaded upfront
+  }, []);
 
-    const { frameStep, batchSize, framePath, supportsImageBitmap } = configRef.current;
-    const totalFrames = totalFramesRef.current;
-    let nextSlot = configRef.current.priorityFrames;
+  const prefetchAround = useCallback((frameIndex) => {
+    // Everything is already loading/loaded upfront
+  }, []);
 
-    function loadNextBatch() {
-      if (nextSlot >= totalFrames) return;
-
-      const batchEnd = Math.min(nextSlot + batchSize, totalFrames);
-      const batchPromises = [];
-
-      for (let i = nextSlot; i < batchEnd; i++) {
-        batchPromises.push(loadSingleFrame(i, framePath, frameStep, supportsImageBitmap));
-      }
-      nextSlot = batchEnd;
-
-      Promise.all(batchPromises).then(() => {
-        if (typeof requestIdleCallback === 'function') {
-          requestIdleCallback(loadNextBatch, { timeout: 200 });
-        } else {
-          setTimeout(loadNextBatch, 50);
-        }
-      });
-    }
-
-    setTimeout(loadNextBatch, 300);
-  }, [loadSingleFrame]);
-
-  // Phase 3: Prefetch around a scroll position
-  const prefetchAround = useCallback(
-    (frameIndex) => {
-      if (!configRef.current) return;
-      const { prefetchWindow, frameStep, framePath, supportsImageBitmap } = configRef.current;
-      const totalFrames = totalFramesRef.current;
-      const start = Math.max(0, frameIndex - 5);
-      const end = Math.min(totalFrames - 1, frameIndex + prefetchWindow);
-
-      for (let i = start; i <= end; i++) {
-        if (!frameLoadedRef.current[i]) {
-          loadSingleFrame(i, framePath, frameStep, supportsImageBitmap);
-        }
-      }
-    },
-    [loadSingleFrame]
-  );
-
-  // Get a frame source (or nearest loaded fallback)
+  // Get a frame source
   const getFrame = useCallback((index) => {
     const totalFrames = totalFramesRef.current;
     const idx = Math.max(0, Math.min(totalFrames - 1, Math.round(index)));
-
-    let frameSource = framesRef.current[idx];
-    if (!frameSource) {
-      for (let offset = 1; offset < 10; offset++) {
-        if (idx - offset >= 0 && framesRef.current[idx - offset]) {
-          frameSource = framesRef.current[idx - offset];
-          break;
-        }
-        if (idx + offset < totalFrames && framesRef.current[idx + offset]) {
-          frameSource = framesRef.current[idx + offset];
-          break;
-        }
-      }
-    }
-    return frameSource;
+    return framesRef.current[idx];
   }, []);
 
   return {

@@ -54,7 +54,7 @@ export default function HomePage() {
   // ── Frame loader callbacks ──
   const onPriorityProgress = useCallback((loaded, total) => {
     if (preloaderBarRef.current) {
-      const pct = Math.round((loaded / total) * 90);
+      const pct = Math.round((loaded / total) * 100);
       preloaderBarRef.current.style.width = pct + '%';
     }
   }, []);
@@ -71,7 +71,6 @@ export default function HomePage() {
           scrollAnim.resizeCanvas();
           scrollAnim.drawFrame(0);
         }
-        frameLoader.startLazyLoading();
       }, 100);
     }, 400);
   // eslint-disable-next-line react-hooks/exhaustive-deps
